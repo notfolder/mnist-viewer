@@ -1,0 +1,57 @@
+{{ js_resources|indent(4)|safe }}
+{{ css_resources|indent(4)|safe }}
+{{ plot_script|indent(4)|safe }}
+{% extends "bootstrap/base.html" %}
+{% block title %}mnist viewer{% endblock %}
+
+{% block content %}
+<h1>mnist viewer</h1>
+
+{% if columns |length==0 %}
+<form method=post action='./' enctype = multipart/form-data>
+    <div class="form-group">
+        <label for="解析するcsvファイルをアップロードしてください">解析するcsvファイルをアップロードしてください</label>
+        <input type="file" class="form-control-file" id="file" name='file'>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+
+{% if columns |length!=0 %}
+<form method=post action='./'>
+<label for="データをクリアする">データをクリアする</label>
+<input type="hidden" name="clear" value="dummy">
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+
+{% if columns |length!=0 %}
+<form method=post action='./'>
+<div class="form-group">
+    <label for="正解ラベルのカラムを選択してください">正解ラベルのカラムを選択してください</label>
+    <select class="form-select" aria-label="正解ラベルのカラムを選択してください" name='label_column'>
+        {% for col in columns %}
+                <option value="{{col}}" {{ 'selected' if label_column == col else '' }}>{{col}}</option>
+        {% endfor %}
+    </select>
+    <br/>
+    <label for="推論ラベルのカラムを選択してください">推論ラベルのカラムを選択してください</label>
+    <select class="form-select" aria-label="推論ラベルのカラムを選択してください" name='pred_column'>
+        {% for col in columns %}
+                <option value="{{col}}" {{ 'selected' if pred_column == col else '' }}>{{col}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</form>
+{% endif %}
+
+{% if warn != '' %}
+<div class="alert alert-primary" role="alert">
+    {{warn}}
+</div>
+{% endif %}
+
+{{ plot_div|indent(4)|safe }}
+
+{% endblock %}
