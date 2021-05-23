@@ -9,20 +9,18 @@ from bokeh.server.server import Server
 from bokeh.embed import server_document
 
 from bokeh.models.widgets.tables import HTMLTemplateFormatter
-from bokeh.models import ColumnDataSource, DataTable, TableColumn, LinearColorMapper, ColorBar, CDSView, BooleanFilter
+from bokeh.models import ColumnDataSource, DataTable, TableColumn, LinearColorMapper, ColorBar
 from bokeh.models.widgets import Button, FileInput, Select, MultiSelect, RadioGroup
 from bokeh.events import ButtonClick, DoubleTap
 from bokeh.layouts import Column, Row
 from bokeh.plotting import figure
-from bokeh.transform import transform, linear_cmap
+from bokeh.transform import transform, log_cmap
 from bokeh.palettes import Viridis256
 
 from flask_sqlalchemy import SQLAlchemy
 
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
 
 import io
 import base64
@@ -151,9 +149,7 @@ def create_disp(label_column='', pred_column=''):
         cm = pd.DataFrame(cm)
         cm = cm.stack().reset_index().rename(columns={'level_0':label_select.value, 'level_1':pred_select.value,0:'count'})
         confusion_matrix_source.data = cm
-
-        colors = ['#75968f', '#a5bab7', '#c9d9d3', '#e2e2e2', '#dfccce', '#ddb7b1', '#cc7878', '#933b41', '#550b1d']
-        mapper = LinearColorMapper(palette=colors, low=cm['count'].min(), high=cm['count'].max())
+        mapper = LinearColorMapper(palette=Viridis256, low=cm['count'].min(), high=cm['count'].max())
         hm.rect(x=pred_select.value, y=label_select.value, source=confusion_matrix_source, width=1, height=1, line_color=None, fill_color=transform('count', mapper))
         hm.text(x=pred_select.value, y=label_select.value, text="count", text_font_style="bold", source=confusion_matrix_source,
                 text_align= "left", text_baseline="middle")
@@ -185,7 +181,7 @@ def create_disp(label_column='', pred_column=''):
         global target_data
         col = color_select.value
         scatter_source.data = {col: target_data[col], 'legend': [f'{col}_{x}' for x in target_data[col]], 'x':target_data[x_select.value], 'y': target_data[y_select.value]}
-        mapper = linear_cmap(field_name=col, palette=Viridis256,
+        mapper = log_cmap(field_name=col, palette=Viridis256,
                             low=min(target_data[col].values), high=max(target_data[col].values))
         plot = dim_reduction_plot.circle(x="x", y="y", source=scatter_source, line_color=mapper, color=mapper, legend_field='legend')
         plot.data_source.selected.on_change('indices', on_dim_change)
