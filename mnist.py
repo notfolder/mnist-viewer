@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import pandas as pd
@@ -34,8 +32,6 @@ imgs.size()
 img = imgs[0]
 # 画像データを表示するために、チャネルファーストのデータをチャネルラストに変換する
 img_permute = img.permute(1, 2, 0)
-# tensorから2次元のarrayに変換する
-sns.heatmap(img_permute.numpy()[:, :, 0])
 
 class MLP(nn.Module):
     def __init__(self):
@@ -88,10 +84,6 @@ for epoch in range(num_epochs):
     losses.append(running_loss)
     accs.append(running_acc)
     print("epoch: {}, loss: {}, acc: {}".format(epoch, running_loss, running_acc))
-
-plt.plot(losses)
-
-plt.plot(accs)
 
 testset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
 testloader = DataLoader(testset, batch_size=128, shuffle=False)

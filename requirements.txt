@@ -1,0 +1,9 @@
+scikit-learn
+torch
+torchvision
+pandas
+flask
+flask_login
+flask_sqlalchemy
+flask_bootstrap
+bokeh

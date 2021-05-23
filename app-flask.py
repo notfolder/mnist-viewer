@@ -1,4 +1,3 @@
-import ptvsd
 from bokeh.models.widgets.tables import HTMLTemplateFormatter
 from flask import Flask, render_template, session
 from flask.helpers import send_file
@@ -232,17 +231,3 @@ def index():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080, debug=True)
-
-# # attach to VS Code debugger if this script was run with BOKEH_VS_DEBUG=true
-# if os.environ['BOKEH_VS_DEBUG'] == 'true':
-#     # 5678 is the default attach port in the VS Code debug configurations
-#     print('Waiting for debugger attach')
-#     ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
-#     ptvsd.wait_for_attach()
-
-# def main():
-#     """Create the root and add it to `curdoc()`."""
-#     raise NotImplementedError()
-
-# if __name__.startswith('bk_script'):
-#     main()

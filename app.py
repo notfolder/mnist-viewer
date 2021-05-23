@@ -2,8 +2,6 @@ from threading import Thread
 from flask import Flask, render_template, session
 from flask import request
 from flask.helpers import send_file
-from flask.json import load
-from matplotlib.pyplot import legend
 from tornado.ioloop import IOLoop
 from flask_login import LoginManager, UserMixin
 
